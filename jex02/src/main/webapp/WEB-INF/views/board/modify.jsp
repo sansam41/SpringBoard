@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@include file="../includes/header.jsp" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 
 <style>
 .uploadResult{
@@ -66,6 +67,7 @@
 			<!-- /.panel-heading -->
 			<div class="panel-body">
 			<form role="form" action="/board/modify" method="post">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type='hidden' id='pageNum' name='pageNum' value='<c:out value="${cri.pageNum }"/>'>	
 				<input type='hidden' id='amount' name='amount' value='<c:out value="${cri.amount }"/>'>	
 				<input type='hidden' id='type' name='type' value='<c:out value="${cri.type }"/>'>	
@@ -88,12 +90,17 @@
 				<label>Writer</label>
 				<input class="form-control" name='writer' value='<c:out value="${board.writer}"/>' readonly="readonly">
 				</div>
+				<sec:authentication property="principal" var="pinfo"/>
+				<sec:authorize access="isAuthenticated()">
+				<c:if test="${pinfo.username eq board.writer }">
 				<button type="submit" data-oper='modify' class="btn btn-default">
 				Modify
 				</button>
 				<button type="submit" data-oper='remove' class="btn btn-danger">
 				Remove
-				</button>				
+				</button>
+				</c:if>
+				</sec:authorize>				
 				<button type="submit" data-oper='list' class="btn btn-info">
 				List
 				</button>
@@ -225,7 +232,8 @@ $(document).ready(function(){
 	
 	var regex=new RegExp("(.*?)\.(exe|sh|zip|alz)$"); //불가능한 파일명 및 확장자
 	var maxSize=5242880;	//5MB
-	
+	var csrfHeaderName="${_csrf.headerName}";
+	var csrfTokenValue="${_csrf.token}";
 	//파일명 및 파일 사이즈 검사 
 	function checkExtension(fileName,fileSize){
 		
@@ -257,6 +265,9 @@ $(document).ready(function(){
 		processData:false,
 		contentType:false,
 		data:formData,
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(csrfHeaderName,csrfTokenValue)
+		},
 		type:'POST',
 		dataType:'json',
 			success: function(result){

@@ -8,7 +8,11 @@
 <h1>
 	Hello world!  
 </h1>
-
+<a class="navbar-brand" href="/board/list">Board_List_Home</a>
 <P>  The time on the server is ${serverTime}. </P>
 </body>
 </html>
+<script type="text/javascript
+">
+self.location="/board/list"''
+</script>

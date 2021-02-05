@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,10 +55,12 @@ public class BoardController {
 	}
 	
 	@GetMapping("/register")
+	@PreAuthorize("isAuthenticated()")
 	public void register() {
 		
 	}
 	@PostMapping("/register")
+	@PreAuthorize("isAuthenticated()")
 	public String register(BoardVO board,RedirectAttributes rttr) {
 		log.info("====================================");
 
@@ -85,6 +88,7 @@ public class BoardController {
 //		model.addAttribute("board",service.get(bno));
 //	}
 	@PostMapping("/modify")
+	@PreAuthorize("isAuthenticated()")
 	public String modify(BoardVO board,@ModelAttribute("cri") Criteria cri,RedirectAttributes rttr) {
 		log.info("modifyregister: "+board);
 		
@@ -97,6 +101,7 @@ public class BoardController {
 	
 	
 	@PostMapping("/remove")
+	@PreAuthorize("isAuthenticated()")
 	public String remove(@RequestParam("bno") Long bno,@ModelAttribute("cri") Criteria cri,Model model,RedirectAttributes rttr){
 		log.info("/remove");
 		List<BoardAttachVO> attachList=service.getAttachList(bno);

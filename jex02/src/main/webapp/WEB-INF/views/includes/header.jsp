@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <head>
 
     <meta charset="utf-8">
@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="list">Board_List_Home</a>
+                <a class="navbar-brand" href="/board/list">Board_List_Home</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -251,13 +251,18 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
+                        <sec:authorize access="isAuthenticated()">
                         <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
+
+                        <li><a href="/customLogout"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                        </sec:authorize>
+                         <sec:authorize access="isAnonymous()">
+                         <li><a href="/customLogin"><i class="fa fa-sign-out fa-fw"></i> Login</a></li>
+                         </sec:authorize>
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
